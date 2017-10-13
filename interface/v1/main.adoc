@@ -1,6 +1,6 @@
 = Business Certificate Publisher Interface Documentation, v1
 Agency of Public Management and eGovernment
-v1.0.0
+v1.0.1
 :doctype: book
 :icons: font
 :toc: left
@@ -28,6 +28,19 @@ This document describes version 1 of the API for lookup. This API uses “v1” 
 
 :sectnums!:
 
+
+=== Version 1.0.1, 2017-10-13
+
+[cols="1,4", options="header"]
+|===
+| Issue
+| Description
+
+| link:https://github.com/difi/bcp-docs/issues/1[#1]
+| Fixing typo in document ("i.e." should be "e.g.").
+|===
+
+
 === Version 1.0.0, 2017-06-23
 
 [cols="1,4", options="header"]
@@ -40,6 +53,7 @@ This document describes version 1 of the API for lookup. This API uses “v1” 
 |===
 
 :sectnums:
+
 
 == Definitions
 
@@ -87,6 +101,7 @@ Role is applied to a process by defining the direction of the first message (sen
 
 BCP is inspired by OASIS BDXR SMP, and support two requests for lookup; list of supported profiles for a given PPID and certificates for a combination of PPID, PID and UC.
 
+
 === General
 
 Lookups are performed in the context of the BCP service. In the case of BCP not running as root application for the hostname is URL paths defined by BCP to be applied to the BCP context.
@@ -130,6 +145,7 @@ Clients is expected to handle HTTP codes per the list below.
 
 It is recommended to provide BCP using HTTPS. BCP services may use the included XML Signature (XMLDsig) for integrity in cases where HTTPS is not used or where such use is specified within domain.
 
+
 === Lookup: Supported profile identifiers
 
 [cols="1,2"]
@@ -146,6 +162,7 @@ This request is performed for a given PPID, and may be used when performing disc
 ----
 <Participant xmlns="urn:fdc:difi.no:2017:virksert:v1" xmlns:ns2="http://www.w3.org/2000/09/xmldsig#"><ParticipantIdentifier scheme="iso6523-actorid-upis">9908:910076787</ParticipantIdentifier><ProcessReference scheme="busdox-procid-ubl">urn:www.cenbii.eu:profile:bii01:ver2.0</ProcessReference><ProcessReference scheme="busdox-procid-ubl">urn:www.cenbii.eu:profile:bii03:ver2.0</ProcessReference><ProcessReference scheme="busdox-procid-ubl">urn:www.cenbii.eu:profile:bii04:ver2.0</ProcessReference><ProcessReference scheme="busdox-procid-ubl">urn:www.cenbii.eu:profile:bii05:ver2.0</ProcessReference><ProcessReference scheme="busdox-procid-ubl">urn:www.cenbii.eu:profile:bii28:ver2.0</ProcessReference><ProcessReference scheme="busdox-procid-ubl">urn:www.cenbii.eu:profile:bii30:ver2.0</ProcessReference><ProcessReference scheme="busdox-procid-ubl">urn:www.cenbii.eu:profile:biixx:ver2.0</ProcessReference></Participant>
 ----
+
 
 === Lookup: Specific profile identifiers and usage scopes
 
@@ -166,7 +183,7 @@ This request is performed for a combination of PPID, PID and role to fetch encry
 <Process xmlns="urn:fdc:difi.no:2017:virksert:v1" xmlns:ns2="http://www.w3.org/2000/09/xmldsig#"><ParticipantIdentifier scheme="iso6523-actorid-upis">9908:910076787</ParticipantIdentifier><ProcessIdentifier scheme="busdox-procid-ubl">urn:www.cenbii.eu:profile:bii01:ver2.0</ProcessIdentifier><Certificate serialNumber="1498123485" expire="1498209918000">MIICuDCCAaCgAwIBAgIEWUuM3TANBgkqhkiG9w0BAQsFADAeMRwwGgYDVQQDDBNFeGFtcGxlIGNlcnRpZmljYXRlMB4XDTE3MDYyMjA5MjUxOFoXDTE3MDYyMzA5MjUxOFowHjEcMBoGA1UEAwwTRXhhbXBsZSBjZXJ0aWZpY2F0ZTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALboRbrjJIs5aRWTCd23/EO42sn3hbV4/zR56yUuOeCHBKmB8PTnQnNNNi4j7qVMdIrs/eBZU+eVkHGs+beeBh7B9Sm2AQHYqv5FOPEOJs+YBxLu9pGcSDvZwdh0h32K3DHuEWXEuNSQmhJ1+xfLWy+mmR711SNByls0pE+9PL/qlkmQLJxaTkhCvOjDqv/Xj6FeliKmGiHGBAv4o8hn0VEl9yKQoxCjTPfhFintfpb13pKftKDZvSr04uZERIfcmg/IWbNzFBRffy/xkZWWs1FJ9nqaWKMeqiKK+pvJGjquVDsKKGvOBPPCP3s/PNdqpn9R114rd4MKEQVqX1rlgFkCAwEAATANBgkqhkiG9w0BAQsFAAOCAQEAVb11xVQ6iosAxICR49JE+41Uz/Cz4htunKZ8DsTxxfxwJtjPn5fknLNyS6/lCnihrmgqE9VG5ENnNqpTq1ASJnVe+42O+yjvJoPv97YxoOo8Ki0Dhh1gP5dmbYXfXX+RegPpnWPxO/IEYSA/5Nw8S3VFxO4e6IHyXVgC9QN30t7aIxyn2vGPzZzyQdg+EZp0SADCMc4UBCa8XmgNpzCfgKA56VemI/iP3IDxZ4J0rEjhCxoo5ItXJiOFQpCyA9vKqtlbEQ+8ZjzreP5+rDk9XskS/Mih/1rgG/unSh2Tbl0q0L6ucBj0dDNFJDQb4z3cwVo8qNPkom3itKPurTlT1Q==</Certificate></Process>
 ----
 
-BCP services must perform validation of each certificate at some interval (i.e. 48 hours), meaning certificates received upon lookup is not checked on-the-fly by BCP and is subject to validation by clients before use.
+BCP services must perform validation of each certificate at some interval (e.g. 48 hours), meaning certificates received upon lookup is not checked on-the-fly by BCP and is subject to validation by clients before use.
 
 All clients fetching certificates must validate certificates received. In a case where multiple certificates are received may any valid certificate be used. Validation of certificates must be per the chain and rules agreed upon within the domain (i.e. Norwegian Business Certificates).
 
@@ -174,12 +191,13 @@ In a situation where all returned certificates fail validation is the lookup app
 
 Caching services may be used per these rules:
 
-•	Use of caching limits must be agreed upon within the domain.
-•	When 5xx is returned by BCP may cached certificates be used per limits.
-•	When 404 or no valid certificates are received must cache purge cached certificate.
+* Use of caching limits must be agreed upon within the domain.
+* When 5xx is returned by BCP may cached certificates be used per limits.
+* When 404 or no valid certificates are received must cache purge cached certificate.
 
 
 == Appendixes
+
 
 [appendix]
 === XSD
