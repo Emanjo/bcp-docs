@@ -1,0 +1,400 @@
+openapi: 3.0.2
+info:
+  version: "1.0.0"
+  title: "Business Certificate Locator Admin API"
+servers:
+  - url: "/api/admin/v1"
+
+paths:
+  /ping:
+    get:
+      tags:
+        - "verification"
+      summary: "Verify connectivity"
+      security:
+        - m2m: ["publisher"]
+      responses:
+        200:
+          description: 'Success'
+          content:
+            'plain/text':
+              schema:
+                type: string
+        401:
+          description: 'Unauthorized'
+
+  /publisher:
+    get:
+      tags:
+        - "publisher"
+      summary: "List publishers"
+      security:
+        - m2m: ["publisher"]
+      parameters:
+        - in: "query"
+          name: "page"
+          description: "Indicating page number to be requested."
+          schema:
+            type: "integer"
+      responses:
+        200:
+          description: "Lish of publishers returned."
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Publishers'
+
+  /publisher/{publisherId}:
+    parameters:
+      - in: "path"
+        name: "publisherId"
+        description: "Publisher identifier"
+        required: true
+        schema:
+          type: "string"
+          pattern: '^[\w\-]+$'
+
+    put:
+      tags:
+        - "publisher"
+      summary: "Create publisher"
+      security:
+        - m2m: ["publisher"]
+      requestBody:
+        description: "Publisher metadata."
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Publisher'
+      responses:
+        201:
+          description: "Publisher created."
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Publisher'
+
+    get:
+      tags:
+        - "publisher"
+      summary: "Fetch publisher"
+      security:
+        - m2m: ["publisher"]
+      responses:
+        200:
+          description: "Publisher found."
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Publisher'
+        404:
+          description: "Publisher not found."
+
+    post:
+      tags:
+        - "publisher"
+      summary: "Update publisher"
+      security:
+        - m2m: ["publisher"]
+      requestBody:
+        description: "Publisher metadata"
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Publisher'
+      responses:
+        200:
+          description: "Publisher updated."
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Publisher'
+        404:
+          description: "Publisher not found."
+
+    delete:
+      tags:
+        - "publisher"
+      summary: "Delete publisher"
+      security:
+        - m2m: ["publisher"]
+      responses:
+        200:
+          description: "Publisher deleted."
+        404:
+          description: "Publisher not found or other errors."
+
+  /publisher/{publisherId}/participants:
+    parameters:
+      - in: "path"
+        name: "publisherId"
+        description: "Publisher identifier"
+        required: true
+        schema:
+          type: "string"
+          pattern: '^[\w\-]+$'
+
+    get:
+      tags:
+        - "publisher"
+      summary: "List participants of publisher"
+      security:
+        - m2m: ["publisher"]
+      parameters:
+        - in: "query"
+          name: "page"
+          description: "Indicating page number to be requested."
+          schema:
+            type: "integer"
+      responses:
+        200:
+          description: "Lish of participants returned."
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Registrations'
+
+
+  /participant/{serviceId}:
+    parameters:
+      - in: "path"
+        name: "serviceId"
+        description: "Service identifier"
+        required: true
+        schema:
+          type: "string"
+          pattern: '^[\w\-]+$'
+
+    get:
+      tags:
+        - "participant"
+      summary: "List participants of users"
+      security:
+        - m2m: ["publisher"]
+      parameters:
+        - in: "query"
+          name: "page"
+          description: "Indicating page number to be requested."
+          schema:
+            type: "integer"
+      responses:
+        200:
+          description: "Lish of participants returned."
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Participants'
+
+  /participant/{serviceId}/{qualifier}::{participantId}:
+    parameters:
+      - in: "path"
+        name: "serviceId"
+        description: "Service identifier"
+        required: true
+        schema:
+          type: "string"
+          pattern: '^[\w\-]+$'
+      - in: "path"
+        name: "qualifier"
+        description: "Participant identifier qualifier"
+        required: true
+        schema:
+          type: "string"
+          pattern: '^[\w\-]+$'
+      - in: "path"
+        name: "participantId"
+        description: "Participant identifier"
+        required: true
+        schema:
+          type: "string"
+          pattern: '^[\w\-\:]+$'
+
+    put:
+      tags:
+        - "participant"
+      summary: "Register participant"
+      security:
+        - m2m: ["publisher"]
+      requestBody:
+        description: "Participant metadata"
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Participant'
+      responses:
+        201:
+          description: "Participant created."
+        404:
+          description: "Publisher not found or participant already exists."
+
+    get:
+      tags:
+        - "participant"
+      summary: "Fetch participant"
+      security:
+        - m2m: ["publisher"]
+      responses:
+        200:
+          description: "Participant found."
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Participant'
+        404:
+          description: "Participant not registered."
+
+    delete:
+      tags:
+        - "participant"
+      summary: "Delete participant"
+      security:
+        - m2m: ["publisher"]
+      responses:
+        200:
+          description: "Participant deleted."
+        404:
+          description: "Participant or publisher not found."
+
+  /service:
+    get:
+      tags:
+        - "service"
+      summary: "Listing services available to user"
+      security:
+        - m2m: ["publisher"]
+        - m2m: ["admin"]
+      responses:
+        200:
+          description: "Services found."
+          content:
+            'application/json':
+              schema:
+                type: "array"
+                items:
+                  type: "string"
+
+  /service/{serviceId}:
+    parameters:
+      - in: "path"
+        name: "serviceId"
+        description: "Service identifier"
+        required: true
+        schema:
+          type: "string"
+          pattern: '^[\w\-]+$'
+
+    get:
+      tags:
+        - "service"
+      summary: "Service information"
+      security:
+        - m2m: ["publisher"]
+        - m2m: ["admin"]
+      responses:
+        200:
+          description: "Service found."
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Service'
+
+components:
+
+  schemas:
+
+    Participants:
+      type: "object"
+      required:
+        - "page"
+        - "pages"
+      properties:
+        page:
+          type: "integer"
+        pages:
+          type: "integer"
+        participantIds:
+          type: "array"
+          items:
+            type: "string"
+
+    Participant:
+      type: "object"
+      properties:
+        publisher_id:
+          type: "string"
+          description: "PublisherID of which the participant is served by. Provided only when participant is registered by the requesting BCP. Is required when registering/updating a participant."
+        owned:
+          type: "boolean"
+          readOnly: true
+
+    Publishers:
+      type: "object"
+      required:
+        - "page"
+        - "pages"
+      properties:
+        page:
+          type: "integer"
+        pages:
+          type: "integer"
+        publisherIds:
+          type: "array"
+          items:
+            type: "string"
+
+    Publisher:
+      type: "object"
+      required:
+        - "uri"
+      properties:
+        uri:
+          type: "string"
+          format: "uri"
+
+    Registration:
+      type: "object"
+      properties:
+        identifier:
+          type: "string"
+        serviceId:
+          type: "string"
+
+    Registrations:
+      type: "object"
+      required:
+        - "page"
+        - "pages"
+      properties:
+        page:
+          type: "integer"
+        pages:
+          type: "integer"
+        registrations:
+          type: "array"
+          items:
+            $ref: '#/components/schemas/Registration'
+
+    Service:
+      type: "object"
+      required:
+        - "title"
+        - "identifier"
+      properties:
+        identifier:
+          description: "Service identifier - may be different from serviceId."
+          type: "string"
+        title:
+          description: "Service title"
+          type: "string"
+        scope:
+          description: "Service scope"
+          type: "string"
+
+  securitySchemes:
+    m2m:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

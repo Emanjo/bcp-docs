@@ -1,0 +1,46 @@
+openapi: 3.0.2
+info:
+  version: "1.0.0"
+  title: "Business Certificate Locator Lookup API"
+servers:
+  - url: "/lookup/v2"
+
+paths:
+  '/{qualifier}::{participantId}':
+    parameters:
+      - in: "path"
+        name: "qualifier"
+        description: "Participant identifier qualifier"
+        required: true
+        schema:
+          type: "string"
+          example: 'iso6523-actorid-upis'
+          pattern: '^[\w\-]+$'
+      - in: "path"
+        name: "participantId"
+        description: "Participant identifier"
+        required: true
+        schema:
+          type: "string"
+          example: '0192:810418052'
+          pattern: '^[\w\-\:]+$'
+
+    get:
+      summary: "Fetch participant information."
+      tags:
+        - "participant"
+      responses:
+        200:
+          description: "Participant found."
+          content:
+            'application/json':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+                  format: uri
+                example:
+                  'oasis-bdxr-smp-2': 'https://smp.example.com/'
+                  SMP: 'https://smp.example.com/'
+        404:
+          description: "Participant not found."

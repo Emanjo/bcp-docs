@@ -1,0 +1,138 @@
+openapi: 3.0.2
+info:
+  version: "1.0.0"
+  title: "Difi eDelivery Auth"
+servers:
+  - url: "/"
+
+paths:
+  '/token':
+    post:
+      tags:
+        - oidc
+      requestBody:
+        content:
+          'application/x-www-form-urlencoded':
+            schema:
+              type: object
+              properties:
+                grant_type:
+                  type: string
+                assertion:
+                  type: string
+
+      responses:
+        200:
+          description: 'Provide token'
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        400:
+          description: 'Missing parameters'
+          content:
+            'plain/text':
+              schema:
+                type: string
+        401:
+          description: 'Unauthorized'
+  '/token/introspection':
+    post:
+      tags:
+        - oidc
+      requestBody:
+        content:
+          'application/x-www-form-urlencoded':
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                token_type_hint:
+                  type: string
+      responses:
+        200:
+          description: Introspection report
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/IntrospectionReport'
+
+  '/ping':
+    get:
+      tags:
+        - "verification"
+      summary: "Verify connectivity"
+      security:
+        - m2m: ["provider"]
+      responses:
+        200:
+          description: 'Success'
+          content:
+            'text/plain':
+              schema:
+                type: string
+        401:
+          description: 'Unauthorized'
+
+components:
+
+  schemas:
+
+    IntrospectionReport:
+      title: "Introspection report"
+      type: object
+      properties:
+        active:
+          type: boolean
+          example: true
+        scope:
+          type: string
+          example: "auth:admin"
+        client_id:
+          type: string
+        username:
+          type: string
+        token_type:
+          type: string
+        exp:
+          type: integer
+        iat:
+          type: integer
+        nbf:
+          type: integer
+        sub:
+          type: string
+        aud:
+          type: string
+        iss:
+          type: string
+        jti:
+          type: string
+
+    TokenResponse:
+      title: "Response containing JWT"
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: "SlAV32hkKG"
+        token_type:
+          type: string
+          example: "Bearer"
+        refresh_token:
+          type: string
+          example: "8xLOxBtZp8"
+        expires_in:
+          type: integer
+          example: 3600
+        id_token:
+          type: string
+          example: "eyJhbGciOiJSUzI1NiIsImtpZCI6IjFlOWdkazcifQ.ewogImlzcyI6ICJodHRwOi8vc2VydmVyLmV4YW1wbGUuY29tIiwKICJzdWIiOiAiMjQ4Mjg5NzYxMDAxIiwKICJhdWQiOiAiczZCaGRSa3F0MyIsCiAibm9uY2UiOiAibi0wUzZfV3pBMk1qIiwKICJleHAiOiAxMzExMjgxOTcwLAogImlhdCI6IDEzMTEyODA5NzAKfQ.ggW8hZ1EuVLuxNuuIJKX_V8a_OMXzR0EHR9R6jgdqrOOF4daGU96Sr_P6qJp6IcmD3HP99Obi1PRs-cwh3LO-p146waJ8IhehcwL7F09JdijmBqkvPeB2T9CJNqeGpe-gccMg4vfKjkM8FcGvnzZUN4_KSP0aAp1tOJ1zZwgjxqGByKHiOtX7TpdQyHE5lcMiKPXfEIQILVq0pc_E2DzL7emopWoaoZTF_m0_N0YzFC6g6EJbOEoRoSK5hoDalrcvRYLSrQAZZKflyuVCyixEoV9GfNQC3_osjzw2PAithfubEEBLuVVk4 XUVrWOLrLl0nx7RkKU8NXNHq-rvKMzqg"
+
+
+  securitySchemes:
+    m2m:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
