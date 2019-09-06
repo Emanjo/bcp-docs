@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Participant xmlns="urn:fdc:difi.no:2019:bcp:v1:signing"> <!--1-->
+  <ParticipantIdentifier qualifier="iso6523-actorid-upis">9908:910076787</ParticipantIdentifier> <!--2-->
+  <ProcessReference qualifier="cenbii-procid-ubl" role="REQUEST">urn:fdc:peppol.eu:poacc:bis:ordering:3</ProcessReference> <!--3-->
+  <ProcessReference qualifier="cenbii-procid-ubl" role="RESPONSE">urn:fdc:peppol.eu:poacc:bis:ordering:3</ProcessReference> <!--3-->
+  <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">[...]</Signature>
+</Participant>

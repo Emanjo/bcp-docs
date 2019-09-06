@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Process xmlns="urn:fdc:difi.no:2019:bcp:v1:signing"> <!--1-->
+  <ParticipantIdentifier qualifier="iso6523-actorid-upis">9908:910076787</ParticipantIdentifier> <!--2-->
+  <ProcessIdentifier qualifier="cenbii-procid-ubl">urn:fdc:peppol.eu:poacc:bis:ordering:3</ProcessIdentifier> <!--3-->
+  <Role>REQUEST</Role> <!--4-->
+  <Date>2019-09-01</Date> <!--5-->
+  <Certificate serialNumber="4567890973354"> <!--6-->
+    <Binary> <!--7-->
+      MIIJZzCCCE+gAwIBAgIQVyH9xTZ0aC1DIaI0Zqc1ujANBgkqhkiG9w0BAQsFADCB
+      kjELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4G
+      A1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQxODA2BgNV
+      BAMTL0NPTU9ETyBSU0EgRXh0ZW5kZWQgVmFsaWRhdGlvbiBTZWN1cmUgU2VydmVy
+      IENBMB4XDTE4MDYyMDAwMDAwMFoXDTIwMDYxOTIzNTk1OVowggFDMRIwEAYDVQQF
+      Ewk5OTE4MjU4MjcxEzARBgsrBgEEAYI3PAIBAxMCTk8xFTATBgsrBgEEAYI3PAIB
+      ARMET3NsbzEdMBsGA1UEDxMUUHJpdmF0ZSBPcmdhbml6YXRpb24xCzAJBgNVBAYT
+      5oEMrhtx5dcFV745w/QhJAqeVri61vswDQYJKoZIhvcNAQELBQADggEBAAEZInvO
+      ...
+      HU+wdyN2lZase7tw6nYETfuNQAlrfQZ0G59jB1GA4lyT7qWnyC6cGEuc8EdGxRt/
+      EcLMC7R9rLNA9sx+Ysh9vPj84rrG39WZ0DFMloEjlcbsxJ5ezVsqj0a356AbrMI/
+      1OdC0XIL7U4g//3detq151BGooi1zQ/FeRWi4dlC7j9OzyKNbGV+WbjCmIFQnPZs
+      mK4TbTm0rKD5dW3FJNuB0cVM/hiFG8dN13vClTIVwje1JxKPtOwcXW3t1xUbdvZ9
+      dnK7aHRw0wf5oNSXG8lE1B/X449POspXEQjn0HbfkCJ6Fs1bywIEQzQOHdBGlmsk
+      lqIUwrWEfwtCjpc=
+    </Binary>
+    <Interval from="2019-05-01T12:34:00Z"/> <!--8-->
+  </Certificate>
+  <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">[...]</Signature>
+</Process>

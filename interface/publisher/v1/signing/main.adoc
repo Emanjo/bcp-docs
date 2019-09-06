@@ -1,0 +1,398 @@
+= Business Certificate Publisher (BCP) Signing Interface Extension Documentation
+Agency of Public Management and eGovernment
+v1.0.0 Draft
+:doctype: book
+:icons: font
+:toc: left
+:toclevels: 2
+:source-highlighter: coderay
+:source-language: xml
+:sectanchors:
+:sectnums:
+
+
+[abstract]
+== Abstract
+
+Business Certificate Publisher (BCP) Signing Interface Extension 1.x is an extension to BCP 1.x where certificate owners may use a BCP service to publish in a structured manner in which processes the individual certificate may be recognized when used for signatures.
+
+This specification and the described functionality is an addition to qualities part of signatures, and is not a replacement of advanced signatures (e.g. AdES), certificate revocation lists (CRL), Online Certificate Status Protocol (OCSP) or other measures related to signatures in the individual domain where singatures are used.
+
+
+== Changelog
+
+:sectnums!:
+
+=== Version 1.0.0, 2019-09-13
+
+[cols="1,4", options="header"]
+|===
+| Issue
+| Description
+
+| _None_
+| Initial document.
+|===
+
+:sectnums:
+
+
+== Definitions
+
+Business Cerficiate Publisher (BCP)::
+BCP is the service providing structured information about certificate(s) used in individual processes (e.g. business document exchange). This service is the one extended by this specification.
+
+Business Certificate Locator (BCL)::
+BCL is the service used to discover the BCP service used by a specific participant. This service is not further described in this spesification.
+
+Process::
+A structed exchange of information between two parties with a clear start and end. In the case of exchange between more than two parties is the process split into multiple processes between two parties.
+
+Process identifier::
+Each process is identified by a URN and a qualifier. Those identifiers and their qualifiers are distributed separatly so they are known to all parties using the process(es).
+
+Role::
+Role identifies the role of a each of the parties taking part in information exchange in a process. A role is either `REQUEST` identifying the party receiving the first message in the exchange, or `RESPONSE` identifying the other party.
+
+Party::
+Organization or some unit of and organization taking part in information exchange where PKI certificates are used as part of security measures.
+
+Participant identifier::
+Identification of a pary part of information exchange. Identifiers is based upon ISO6523 and their registered  International Code Designators (ICD). Example of identifier for a Norwegian organization number: `0192:991825827`.
+
+Participant identifier qualifier::
+Participant identifiers are qualified to recognize the use of ICDs and known issuers. The identifier `iso6523-actorid-upis` is used for this purpose.
+
+Signature::
+Some kind of signature where PKI certificates are used to generate and verify the signature. Signature is used for integrity control and verification of source.
+
+
+== Introduction
+
+Publishing of certificates used for signing is the next logical step after introducing Business Certificate Publisher (BCP) to publish certificates used for encryption of content.
+
+Use of encryption in combination of PKI requires some kind of distribution effort and routines by both sender and receiver to be able to send encrypted content. With the introduction of BCP for encryption certificates made it possible to use a generic interface to fetch the certificate to use in the specific information exchange without any activities upfront.
+
+Exchange of certificates used for signing requires the same distribution effort and routines as certificates used for signatures. On the other hand will signature certificates also require information about which certificate was used at a the time of signing, rather than the certificate currently in use.
+
+This specification describes the interface used to publish cerfificates used for signing and routines to be implemented by clients.
+
+
+== Use case
+
+
+=== Avoiding fake orders
+
+Description::
+To avoid handling of fake orders are all orders signed using a PKI certificate and the certificate used is verified towards the certficiate whitelist of each customer.
+
+Roles::
+Customer, Supplier
+
+Assumtions::
+* Customer is known to Supplier to e.g. a contract.
+* Customer and Supplier has not exchanged certificates upfront.
+* The ordering process is a known process with necessary identification of the parties and the process itself.
+
+Flow::
+1. Supplier receives a new order sent by Customer.
+1. Customer is recognized by the handling system of Supplier.
+1. The signature attached to the order is verified successfully and verifies the integrity of the order and the certificate used is extracted.
+1. Supplier looks up in the BCP service which certificates was activated by Customer for signing of orders at the time of signing, effectively a whitelist of zero or more certificates.
+1. Supplier verifies the certificate used for signing of order is part of the whitelist received from the BCP service.
+
+Result::
+Supplier will continue processing of order if the certificate is successfully validated towards the whitelist, otherwise will all handling of the order stop.
+
+
+== Responsibilities
+
+
+=== Responsibilities of BCP service
+
+Registration in BCL::
+When BCP service runs in a configuration with BCL is the BCP service provider responsible for registrion of the participant in the BCL service. This BCP extension inherits the same BCL service identifier as for the BCP 1.x specification.
+
+Validation of certificates::
+All certificates used for signatures must be validated before made available in the publisher. After a certificate is registered must the certificate be validated towards the relevant CRL/OCSP service minimum every 24 hours.
+
+Automatic disabling::
+Revoced and expired certificate must be disabled from use when discovered during daily validation. The timestamp use for `to` is the time of revocation/expiration when available, otherwise the timestamp of discovery. Revoced certificates may be enabled after revocing revociation status, however only upon request from the customer.
+
+
+=== Responsibilities of BCP client
+
+Validation of certificates::
+All certificates verified towards the BCP whitelist must be validated independent of the BCP whitelist. Use of BCP for certificates for signatures is simply an addition to other validations and quality measures.
+
+Handling responses::
+All responses must be verified according to the steps outlined for each lookup type. Even when using a shorthand API path must the default values be validated.
+
+Caching::
+Clients are free to perform caching of the response accoring to the agreements withing the particular business domain. Caching of date specific responses is encouraged as long as the UTC date is older than the current UTC date.
+
+
+== Supported lookups
+
+BCP is inspired by OASIS BDXR SMP, and support two requests for lookup; list of supported profiles for a given particiapnt and certificates for a combination of participant, process and role.
+
+
+=== General
+
+
+==== Addressing the BCP service
+
+Lookups are performed in the context of the BCP service. In the case of BCP not running as root application for the hostname is URL paths defined by BCP to be applied to the BCP context. BCP context is in a distibuted setup received from the BCL.
+
+.Example 1
+[cols="1,2"]
+|===
+h| API path
+| `/api/v1/[..]`
+
+h| BCP context +
+(BCL Response)
+| `pass:[https://bcp.example.com/]`
+
+h| Request URL
+| `pass:[https://bcp.example.com/api/v1/[..]]`
+|===
+
+.Example 2
+[cols="1,2"]
+|===
+h| API path:
+| `/api/v1/[..]`
+
+h| BCP context +
+(BCL Response)
+| `pass:[https://example.com/bcp/]`
+
+h| Request URL
+| `pass:[https://example.com/bcp/api/v1/[..]]`
+|===
+
+
+==== Values in paths
+
+Values in paths must be URL encoded when replacing value holders in this document. Service implementations are free to support non-encoded values; however, client implementations must implement with encoding of values. Any other parts of the URL are not subject to encoding.
+
+.Value holders and their values
+[cols="1,3,3"]
+|===
+| Value holder
+| Value
+| Example
+
+| `[ParticipantID]`
+| `Participant identifier qualifier` + `::` + `Participant identifier`
+| `iso6523-actorid-upis::9908:910076787`
+
+| `[ProcessID]`
+| `Process identifier qualifier` + `::` + `Process identifier`
+| `busdox-procid-ubl::urn:www.cenbii.eu:profile:bii05:ver2.0`
+
+| `[RoleID]`
+| `REQUEST` or `RESPONSE`
+| `REQUEST`
+
+| `[Date]`
+| Pattern: `YYYY-MM-DD`
+| `2019-09-01`
+|===
+
+
+==== Date and time
+
+All dates and timestamps must be expressed according to UTC.
+
+
+==== Allowed HTTP codes
+
+Clients is expected to handle HTTP codes per the list below.
+
+[cols="1,4", options="header"]
+|===
+| HTTP Code
+| Description
+
+| 200
+| Content available.
+
+| 3xx
+| Not in use
+
+| 404
+| No content found for the lookup.
+
+| 5xx
+| Error in the service, try again later.
+|===
+
+
+==== HTTPS and signed responses
+
+It is recommended to provide BCP using HTTPS. BCP services must use the included XML Signature (XMLDsig) for integrity of the response.
+
+
+=== List of supported processes
+
+[cols="1,2"]
+|===
+| API path
+| `/api/v1/[ParticipantID]`
+
+| Supported methods
+| `GET`
+
+| Response element
+| Participant
+|===
+
+
+==== Creating response
+
+1. All currently supported combinations of process identifiers and roles are listed.
+1. Responses are always signed by the BCP service certificate.
+
+
+==== Response
+
+[source,xml]
+----
+include::example/participant.xml[]
+----
+<1> Root element of the participant response.
+<2> Participant identifier identifying the party.
+<3> One or more process identifiers and roles identifying supported processes.
+
+
+==== Verification of response
+
+Before trusting the response, the following steps must be done by the client:
+
+1. Validate signature of the response.
+1. Verify certificate used for signing towards known whitelist.
+1. Verify participant identifier is equal to the one requested.
+
+
+=== Certificate whitelist
+
+[cols="1,2"]
+|===
+| API path
+| `/api/v1/[ParticipantID]/[ProcessID](/[RoleID])(/[Date])`
+
+| Supported methods
+| `GET`
+
+| Response element
+| Process (with Date)
+
+| Default values
+| `[RoleID]` - `REQEST` +
+`[Date]` - Current date in UTC
+|===
+
+
+==== Creating response
+
+1. A response is always generated if the combination of process and role is currently or previously suppored.
+1. HTTP code `404` is returned if the combination of process and role is currently or previously not supported.
+1. Default values are provided even when the value is not part of the requested path.
+1. Intervals relevant to the requested date is listed. If the certificate was enable e.g. in the morning and in the evening separatly must both be listed.
+1. Intervals are always explicitly provided with the actual timestamps and not timestamps relevant to the requested datde.
+1. Intervals still active is provided without `to` timestamp.
+1. Responses are always signed by the BCP service certificate.
+
+
+==== Response
+
+[source,xml]
+----
+include::example/process.xml[]
+----
+<1> Root element of the process response.
+<2> Participant identifier identifying the party.
+<3> Process identifier identifying the process.
+<4> Role identifier.
+<5> The date of which the response is for.
+<6> Zero or more certificate listings identified by certificate serial number.
+<7> The complete certificate.
+<8> One or more intervals of when the certificate is valid at the requested date.
+
+
+==== Verification of response
+
+Before trusting the response, the following steps must be done by the client:
+
+1. Validate signature of the response.
+1. Verify certificate used for signing towards known whitelist.
+1. Verify participant identifier is equal to the one requested.
+1. Verify process identifier is equal to the one requested.
+1. Verify the role identifier is equal to the one requested.
+1. Verify the date is equal to the one requested.
+
+
+=== Historic certificate whitelist
+
+[cols="1,2"]
+|===
+| API path
+| `/api/v1/[ParticipantID]/[ProcessID](/[RoleID])/historic`
+
+| Supported methods
+| `GET`
+
+| Response element
+| Process (with Timestamp)
+
+| Default values
+| `[RoleID]` - `REQEST`
+|===
+
+
+==== Creating response
+
+1. A response is always generated if the combination of process and role is currently or previously suppored.
+1. All intervals related to the certificates listed is provided.
+1. Intervals are always explicitly provided with the actual timestamps.
+1. Intervals still active is provided without `to` timestamp.
+1. Responses are always signed by the BCP service certificate.
+
+
+==== Response
+
+[source,xml]
+----
+include::example/process-historic.xml[]
+----
+<1> Root element of the process response.
+<2> Participant identifier identifying the party.
+<3> Process identifier identifying the process.
+<4> Role identifier.
+<5> The timestamp of creation of the response.
+<6> Zero or more certificate listings identified by certificate serial number.
+<7> The complete certificate.
+<8> One or more intervals of when the certificate is valid at the requested date.
+
+
+==== Verification of response
+
+Before trusting the response, the following steps must be done by the client:
+
+1. Validate signature of the response.
+1. Verify certificate used for signing towards known whitelist.
+1. Verify participant identifier is equal to the one requested.
+1. Verify process identifier is equal to the one requested.
+1. Verify the role identifier is equal to the one requested.
+1. Verify the timestamp is withing the last 24 hours.
+
+
+[appendix]
+== XSD files (normative)
+
+The following XSD files are part of this spesification:
+
+* link:xsd/bcp-signing-1.0.xsd[BCP Signing 1.0] - The XSD used for describing models specific to this specification.
+* link:xsd/xmldsig-core-schema.xsd[XMLDsig] - Support for signatures.
