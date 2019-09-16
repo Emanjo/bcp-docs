@@ -148,28 +148,28 @@ Lookups are performed in the context of the BCP service. In the case of BCP not 
 [cols="1,2"]
 |===
 h| API path
-| `/api/v1/[..]`
+| `/api/v1/sig/[..]`
 
 h| BCP context +
 (BCL Response)
 | `pass:[https://bcp.example.com/]`
 
 h| Request URL
-| `pass:[https://bcp.example.com/api/v1/[..]]`
+| `pass:[https://bcp.example.com/api/v1/sig/[..]]`
 |===
 
 .Example 2
 [cols="1,2"]
 |===
 h| API path:
-| `/api/v1/[..]`
+| `/api/v1/sig/[..]`
 
 h| BCP context +
 (BCL Response)
 | `pass:[https://example.com/bcp/]`
 
 h| Request URL
-| `pass:[https://example.com/bcp/api/v1/[..]]`
+| `pass:[https://example.com/bcp/api/v1/sig/[..]]`
 |===
 
 
@@ -240,7 +240,7 @@ It is recommended to provide BCP using HTTPS. BCP services must use the included
 [cols="1,2"]
 |===
 | API path
-| `/api/v1/[ParticipantID]`
+| `/api/v1/sig/[ParticipantID]`
 
 | Supported methods
 | `GET`
@@ -281,7 +281,7 @@ Before trusting the response, the following steps must be done by the client:
 [cols="1,2"]
 |===
 | API path
-| `/api/v1/[ParticipantID]/[ProcessID](/[RoleID])(/[Date])`
+| `/api/v1/sig/[ParticipantID]/[ProcessID](/[RoleID])(/[Date])`
 
 | Supported methods
 | `GET`
@@ -339,7 +339,7 @@ Before trusting the response, the following steps must be done by the client:
 [cols="1,2"]
 |===
 | API path
-| `/api/v1/[ParticipantID]/[ProcessID](/[RoleID])/historic`
+| `/api/v1/sig/[ParticipantID]/[ProcessID](/[RoleID])/historic`
 
 | Supported methods
 | `GET`
