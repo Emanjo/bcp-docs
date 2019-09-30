@@ -33,6 +33,7 @@
     <xsd:complexType name="ParticipantType">
         <xsd:sequence>
             <xsd:element name="ParticipantIdentifier" type="IdentifierType"/>
+            <xsd:element name="Timestamp" type="xsd:dateTime"/>
             <xsd:element name="ProcessReference" type="ProcessReferenceType" maxOccurs="unbounded"/>
             <xsd:element ref="xmldsig:Signature"/>
         </xsd:sequence>

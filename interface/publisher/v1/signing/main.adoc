@@ -23,7 +23,7 @@ This specification and the described functionality is an addition to qualities p
 
 :sectnums!:
 
-=== Version 1.0.0, 2019-09-13
+=== Version 1.0.0, 2019-MM-DD
 
 [cols="1,4", options="header"]
 |===
@@ -148,13 +148,13 @@ Lookups are performed in the context of the BCP service. In the case of BCP not 
 [cols="1,2"]
 |===
 h| API path
-| `/api/v1/sig/[..]`
+| `api/v1/sig/[..]`
 
 h| BCP context +
-(BCL Response)
+(from BCL response)
 | `pass:[https://bcp.example.com/]`
 
-h| Request URL
+h| Request URI
 | `pass:[https://bcp.example.com/api/v1/sig/[..]]`
 |===
 
@@ -162,13 +162,13 @@ h| Request URL
 [cols="1,2"]
 |===
 h| API path:
-| `/api/v1/sig/[..]`
+| `api/v1/sig/[..]`
 
 h| BCP context +
-(BCL Response)
+(from BCL response)
 | `pass:[https://example.com/bcp/]`
 
-h| Request URL
+h| Request URI
 | `pass:[https://example.com/bcp/api/v1/sig/[..]]`
 |===
 
@@ -240,13 +240,13 @@ It is recommended to provide BCP using HTTPS. BCP services must use the included
 [cols="1,2"]
 |===
 | API path
-| `/api/v1/sig/[ParticipantID]`
+| `api/v1/sig/[ParticipantID]`
 
 | Supported methods
 | `GET`
 
 | Response element
-| Participant
+| `Participat`
 |===
 
 
@@ -264,7 +264,8 @@ include::example/participant.xml[]
 ----
 <1> Root element of the participant response.
 <2> Participant identifier identifying the party.
-<3> One or more process identifiers and roles identifying supported processes.
+<3> The timestamp of creation of the response.
+<4> One or more process identifiers and roles identifying supported processes.
 
 
 ==== Verification of response
@@ -281,13 +282,13 @@ Before trusting the response, the following steps must be done by the client:
 [cols="1,2"]
 |===
 | API path
-| `/api/v1/sig/[ParticipantID]/[ProcessID](/[RoleID])(/[Date])`
+| `api/v1/sig/[ParticipantID]/[ProcessID](/[RoleID])(/[Date])`
 
 | Supported methods
 | `GET`
 
 | Response element
-| Process (with Date)
+| `Process` (with Date)
 
 | Default values
 | `[RoleID]` - `REQEST` +
@@ -334,18 +335,61 @@ Before trusting the response, the following steps must be done by the client:
 1. Verify the date is equal to the one requested.
 
 
-=== Historic certificate whitelist
+=== Historic list of supported processes
 
 [cols="1,2"]
 |===
 | API path
-| `/api/v1/sig/[ParticipantID]/[ProcessID](/[RoleID])/historic`
+| `api/v1/sig/historic/[ParticipantID]`
 
 | Supported methods
 | `GET`
 
 | Response element
-| Process (with Timestamp)
+| `Participant`
+|===
+
+
+==== Creating response
+
+1. All historically supported combinations of process identifiers and roles are listed.
+1. Responses are always signed by the BCP service certificate.
+
+
+==== Response
+
+[source,xml]
+----
+include::example/participant.xml[]
+----
+<1> Root element of the participant response.
+<2> Participant identifier identifying the party.
+<3> The timestamp of creation of the response.
+<4> One or more process identifiers and roles identifying supported processes.
+
+
+==== Verification of response
+
+Before trusting the response, the following steps must be done by the client:
+
+1. Validate signature of the response.
+1. Verify certificate used for signing towards known whitelist.
+1. Verify participant identifier is equal to the one requested.
+
+
+
+=== Historic certificate whitelist
+
+[cols="1,2"]
+|===
+| API path
+| `api/v1/sig/historic/[ParticipantID]/[ProcessID](/[RoleID])`
+
+| Supported methods
+| `GET`
+
+| Response element
+| `Process` (with `Timestamp`)
 
 | Default values
 | `[RoleID]` - `REQEST`
