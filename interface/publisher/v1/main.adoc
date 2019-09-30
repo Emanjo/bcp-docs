@@ -121,7 +121,7 @@ Lookups are performed in the context of the BCP service. In the case of BCP not 
 [cols="1,2"]
 |===
 h| API path
-| api/v1/[PID]
+| `api/v1/[PID]`
 
 h| BCP context +
 (from BCL response)
@@ -135,7 +135,7 @@ h| Request URI
 [cols="1,2"]
 |===
 h| API path:
-| api/v1/[PID]
+| `api/v1/[PID]`
 
 h| BCP context +
 (from BCL response)
@@ -150,9 +150,9 @@ PPID and PID must be URL encoded when replacing value holders in this document. 
 .Example 3
 [cols="1,2"]
 |===
-| Qualifier | iso6523-actorid-upis
-| Identifier | 9908:910076787
-| Encoded | iso6523-actorid-upis%3A%3A9908%3A910076787
+| Qualifier | `iso6523-actorid-upis`
+| Identifier | `9908:910076787`
+| Encoded | `iso6523-actorid-upis%3A%3A9908%3A910076787`
 |===
 
 Clients is expected to handle HTTP codes per the list below.
@@ -173,9 +173,9 @@ It is recommended to provide BCP using HTTPS. BCP services may use the included 
 
 [cols="1,2"]
 |===
-h| API path | api/v1/[PPID]
+h| API path | `api/v1/[PPID]`
 h| Supported methods | GET
-h| Response element | Participant
+h| Response element | `Participant`
 |===
 
 This request is performed for a given PPID, and may be used when performing discovery.
@@ -192,10 +192,10 @@ This request is performed for a given PPID, and may be used when performing disc
 [cols="1,2"]
 |===
 h| API path
-| api/v1/[PPID]/[PID] (Returns Role=REQUEST) +
-api/v1/[PPID]/[PID]/[Role]
+| `api/v1/[PPID]/[PID]` (Returns Role=`REQUEST`) +
+`api/v1/[PPID]/[PID]/[Role]`
 h| Supported methods | GET
-h| Response element | Process
+h| Response element | `Process`
 |===
 
 This request is performed for a combination of PPID, PID and role to fetch encryption certificates.
