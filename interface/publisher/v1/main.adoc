@@ -1,6 +1,6 @@
 = Business Certificate Publisher Interface Documentation, v1
 Agency of Public Management and eGovernment
-v1.0.1
+v1.0.2
 :doctype: book
 :icons: font
 :toc: left
@@ -27,6 +27,17 @@ This document describes version 1 of the API for lookup. This API uses “v1” 
 == Changelog
 
 :sectnums!:
+
+=== Version 1.0.2, 2019-09-30
+
+[cols="1,4", options="header"]
+|===
+| Issue
+| Description
+
+| _None_
+| Updating examples in 5.1, and updating URL path in 5.2 and 5.3 accordingly. Changing from "URL path" to "API path" for clarification.
+|===
 
 
 === Version 1.0.1, 2017-10-13
@@ -109,17 +120,29 @@ Lookups are performed in the context of the BCP service. In the case of BCP not 
 .Example 1
 [cols="1,2"]
 |===
-h| URL path | /api/v1/[PID]
-h| BCP context | pass:[http://bcp.example.com/]
-h| Request URL | pass:[http://bcp.example.com/api/v1/[PID]]
+h| API path
+| api/v1/[PID]
+
+h| BCP context +
+(from BCL response)
+| `pass:[http://bcp.example.com/]`
+
+h| Request URI
+| `pass:[http://bcp.example.com/api/v1/[PID]]`
 |===
 
 .Example 2
 [cols="1,2"]
 |===
-h| URL path: | /api/v1/[PID]
-h| BCP context | pass:[http://example.com/bcp/]
-h| Request URL | pass:[http://example.com/bcp/api/v1/[PID]]
+h| API path:
+| api/v1/[PID]
+
+h| BCP context +
+(from BCL response)
+| `pass:[http://example.com/bcp/]`
+
+h| Request URI
+| `pass:[http://example.com/bcp/api/v1/[PID]]`
 |===
 
 PPID and PID must be URL encoded when replacing value holders in this document. Service implementations are free to support non-encoded values; however, client implementations must implement with encoding of values. Any other parts of the URL are not subject to encoding.
@@ -150,7 +173,7 @@ It is recommended to provide BCP using HTTPS. BCP services may use the included 
 
 [cols="1,2"]
 |===
-h| URL path | /api/v1/[PPID]
+h| API path | api/v1/[PPID]
 h| Supported methods | GET
 h| Response element | Participant
 |===
@@ -168,9 +191,9 @@ This request is performed for a given PPID, and may be used when performing disc
 
 [cols="1,2"]
 |===
-h| URL path
-| /api/v1/[PPID]/[PID] (Returns Role=REQUEST) +
-/api/v1/[PPID]/[PID]/[Role]
+h| API path
+| api/v1/[PPID]/[PID] (Returns Role=REQUEST) +
+api/v1/[PPID]/[PID]/[Role]
 h| Supported methods | GET
 h| Response element | Process
 |===
